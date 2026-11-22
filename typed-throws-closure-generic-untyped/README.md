@@ -34,4 +34,4 @@ Actual (affected toolchains): exit 1. The compiler crashes (segmentation fault) 
 - Swift 6.4.2 with the fix: the script passes;
 - nightly main: informational, shows whether the development toolchain is still affected.
 
-Verified run: https://github.com/Hyp3rSon1X/swift-repros/actions/runs/45022547887 (2026-11-22). Run logs expire after 90 days; the weekly runs keep the workflow page current.
+Verified run: https://github.com/Hyp3rSon1X/swift-repros/actions/runs/45023684831 (2026-11-22). Run logs expire after 90 days; the weekly runs keep the workflow page current.

@@ -5,7 +5,7 @@ Passing `#isolation` to a consuming generic argument (such as `String(describing
 - Upstream issue: https://github.com/swiftlang/swift/issues/92799
 - Upstream PR: not filed yet
 - Status: open upstream; fix ready, PR not filed yet
-- Affects: Swift 6.4.x and main (nightly 6.5-dev, 2026-11); earlier versions not checked
+- Affects: Swift 6.3.3, 6.4.x and main (nightly 6.5-dev, 2026-11)
 
 ## Problem
 
@@ -34,4 +34,4 @@ Actual (affected toolchains): exit 1. `Worker.deinit` runs during the first call
 - Swift 6.4.2 with the fix: the script passes;
 - nightly main: informational, shows whether the development toolchain is still affected.
 
-Verified run: https://github.com/Hyp3rSon1X/swift-repros/actions/runs/45022547887 (2026-11-22). Run logs expire after 90 days; the weekly runs keep the workflow page current.
+Verified run: https://github.com/Hyp3rSon1X/swift-repros/actions/runs/45023684831 (2026-11-22). Run logs expire after 90 days; the weekly runs keep the workflow page current.
