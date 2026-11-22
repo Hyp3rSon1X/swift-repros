@@ -5,7 +5,7 @@ Passing `#isolation` to a consuming generic argument (such as `String(describing
 - Upstream issue: https://github.com/swiftlang/swift/issues/92799
 - Upstream PR: not filed yet
 - Status: open upstream; fix ready, PR not filed yet
-- Affects: Swift 6.4.x and main (nightly 6.5-dev, 2026-11)
+- Affects: Swift 6.4.x and main (nightly 6.5-dev, 2026-11); earlier versions not checked
 
 ## Problem
 
@@ -24,7 +24,7 @@ Actual (affected toolchains): exit 1. `Worker.deinit` runs during the first call
 
 ## Fix
 
-`RValueEmitter::visitCurrentContextIsolationExpr` in SILGen now copies the isolation value unless the context accepts a +0 value, as `emitExtractFunctionIsolation` does. The change comes with a SILGen and an interpreter test. The fix will be linked here once the pull request is filed.
+`RValueEmitter::visitCurrentContextIsolationExpr` in SILGen now copies the isolation value unless the context accepts a +0 value, as `emitExtractFunctionIsolation` does. The change comes with a SILGen test and an executable test. The fix will be linked here once the pull request is filed.
 
 ## CI
 

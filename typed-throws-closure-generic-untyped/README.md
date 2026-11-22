@@ -5,7 +5,7 @@
 - Upstream issue: https://github.com/swiftlang/swift/issues/92312
 - Upstream PR: not filed yet
 - Status: open upstream; fix ready, PR not filed yet
-- Affects: Swift 6.4.x and main (nightly 6.5-dev, 2026-11)
+- Affects: Swift 6.4.x and main (nightly 6.5-dev, 2026-11); 6.3.3 is not affected (a 6.4 regression)
 
 ## Problem
 

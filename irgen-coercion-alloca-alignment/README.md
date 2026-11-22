@@ -5,7 +5,7 @@ IRGen copies a value out of a coercion temporary that is allocated with 8-byte a
 - Upstream issue: https://github.com/swiftlang/swift/issues/93129
 - Upstream PR: not filed yet
 - Status: open upstream; fix ready, PR not filed yet
-- Affects: Swift 6.4.x and main (nightly 6.5-dev, 2026-11); the crash needs an x86_64 target
+- Affects: Swift 6.3.3 (per the issue), 6.4.x and main (nightly 6.5-dev, 2026-11); the crash needs an x86_64 target
 
 ## Problem
 
