@@ -15,7 +15,7 @@ echo "compiler: $("$swiftc" --version 2>&1 | head -1)"
 # On macOS the IR is generated for x86_64; elsewhere for the host target.
 target=()
 [ "$(uname -s)" = Darwin ] && target=(-target x86_64-apple-macos13)
-if ! "$swiftc" "${target[@]}" -Onone -emit-ir "$here/repro.swift" -o "$work/repro.ll" 2>"$work/ir.err"; then
+if ! "$swiftc" ${target[@]+"${target[@]}"} -Onone -emit-ir "$here/repro.swift" -o "$work/repro.ll" 2>"$work/ir.err"; then
   echo "setup: -emit-ir failed"; head -5 "$work/ir.err"; exit 2
 fi
 bad="$(awk '
