@@ -8,6 +8,15 @@ command -v "$swiftc" >/dev/null 2>&1 || { echo "setup: compiler not found: $swif
 work="$(mktemp -d)" || exit 2
 trap 'rm -rf "$work"' EXIT
 
+# Indented excerpt of a log (the real compiler or program output), shown when a check fails.
+show() { sed -n "1,${2:-40}p" "$1" | sed 's/^/    | /'; }
+# Runs a built program with its output in $2 and returns its exit status. stdbuf (Linux) keeps the output
+# printed before a crash; the braces keep the shell's own "Segmentation fault" notice out of the log.
+run_prog() {
+  if command -v stdbuf >/dev/null 2>&1; then { stdbuf -oL -eL "$1" >"$2" 2>&1; } 2>/dev/null
+  else { "$1" >"$2" 2>&1; } 2>/dev/null; fi
+}
+
 echo "compiler: $("$swiftc" --version 2>&1 | head -1)"
 
 # IR check: a memcpy that claims 16-byte alignment for its source must not read
@@ -32,6 +41,7 @@ if [ -z "$bad" ]; then
   ir_ok=1
 else
   echo "check 1 (IR, -Onone): BUG, $bad"
+  grep -n -E '%temp-coercion[A-Za-z0-9_.]* = alloca|memcpy.*%temp-coercion' "$work/repro.ll" > "$work/ir.lines"; show "$work/ir.lines" 12
   ir_ok=0
 fi
 
@@ -39,11 +49,11 @@ fi
 run_ok=1
 if [ "$(uname -m)" = x86_64 ]; then
   if "$swiftc" -Onone "$here/repro.swift" -o "$work/repro" 2>"$work/build.err"; then
-    out="$("$work/repro" 2>&1)"; rc=$?
+    run_prog "$work/repro" "$work/run.out"; rc=$?; out="$(cat "$work/run.out")"
     if [ "$rc" = 0 ] && [ "$out" = true ]; then
       echo "check 2 (run, -Onone): ok, printed 'true'"
     else
-      echo "check 2 (run, -Onone): BUG, exit status $rc, output '$out'"; run_ok=0
+      echo "check 2 (run, -Onone): BUG, exit status $rc$([ "$rc" -gt 128 ] && echo " (signal $((rc-128)))"); program output:"; show "$work/run.out"; run_ok=0
     fi
   else
     echo "setup: build failed"; head -5 "$work/build.err"; exit 2

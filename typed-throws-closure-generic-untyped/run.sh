@@ -8,6 +8,9 @@ command -v "$swiftc" >/dev/null 2>&1 || { echo "setup: compiler not found: $swif
 work="$(mktemp -d)" || exit 2
 trap 'rm -rf "$work"' EXIT
 
+# Indented excerpt of a log (the real compiler or program output), shown when a check fails.
+show() { sed -n "1,${2:-40}p" "$1" | sed 's/^/    | /'; }
+
 echo "compiler: $("$swiftc" --version 2>&1 | head -1)"
 
 # The program only needs to compile; the bug is a compiler crash in IR generation.
@@ -21,7 +24,7 @@ for mode in "-emit-ir" "-c"; do
     if [ "$rc" = 0 ]; then
       echo "$label: ok, compiled"
     elif [ "$rc" -ge 128 ] || grep -q -E 'Stack dump|Assertion|Please submit a bug report' "$work/build.err"; then
-      echo "$label: BUG, compiler crashed (exit status $rc)"; status=1
+      echo "$label: BUG, compiler crashed (exit status $rc)"; show "$work/build.err" 30; status=1
     else
       echo "setup: unexpected compile error"; head -5 "$work/build.err"; exit 2
     fi
