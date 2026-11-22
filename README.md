@@ -1,6 +1,6 @@
 # swift-repros
 
-Minimal reproducers for Swift toolchain bugs that were reported or fixed upstream. Each directory holds a small Swift program and a `run.sh` that checks whether the toolchain in use is affected.
+An open list of Swift toolchain problems we found and fixed: minimal reproducers for bugs that were reported or fixed upstream. Each directory holds a small Swift program and a `run.sh` that checks whether the toolchain in use is affected.
 
     cd <directory>
     ./run.sh
@@ -12,17 +12,27 @@ Minimal reproducers for Swift toolchain bugs that were reported or fixed upstrea
 - 1: the bug was reproduced
 - 2: setup problem (for example the compiler was not found)
 
+## Proposed upstream
+
+None yet.
+
+## Open upstream, fix ready
+
 |Directory|Problem|Upstream issue|Status|
 |-|-|-|-|
-|`irgen-coercion-alloca-alignment`|Misaligned coercion temporary in IRGen; aligned load crashes on x86_64|[swiftlang/swift#93129](https://github.com/swiftlang/swift/issues/93129)|open, fix proposed|
-|`silgen-isolation-nonsending-overrelease`|`#isolation` in a `nonisolated(nonsending)` function over-releases the calling actor|[swiftlang/swift#92799](https://github.com/swiftlang/swift/issues/92799)|open, fix proposed|
-|`typed-throws-closure-generic-untyped`|IRGen crash for a typed-throws closure passed to a generic untyped-throws parameter|[swiftlang/swift#92312](https://github.com/swiftlang/swift/issues/92312)|open, fix proposed|
+|[`irgen-coercion-alloca-alignment`](irgen-coercion-alloca-alignment)|Misaligned coercion temporary in IRGen; aligned load crashes on x86_64|[swiftlang/swift#93129](https://github.com/swiftlang/swift/issues/93129)|open upstream; fix ready, PR not filed yet|
+|[`silgen-isolation-nonsending-overrelease`](silgen-isolation-nonsending-overrelease)|`#isolation` in a `nonisolated(nonsending)` function over-releases the calling actor|[swiftlang/swift#92799](https://github.com/swiftlang/swift/issues/92799)|open upstream; fix ready, PR not filed yet|
+|[`typed-throws-closure-generic-untyped`](typed-throws-closure-generic-untyped)|IRGen crash for a typed-throws closure passed to a generic untyped-throws parameter|[swiftlang/swift#92312](https://github.com/swiftlang/swift/issues/92312)|open upstream; fix ready, PR not filed yet|
+
+## Upstreamed
+
+None yet. Directories whose fix was merged upstream move to [`upstreamed/`](upstreamed). Issues and pull requests link commit-pinned paths, so moving a directory does not break those links.
 
 ## CI
 
 [![repros](https://github.com/Hyp3rSon1X/swift-repros/actions/workflows/repros.yml/badge.svg)](https://github.com/Hyp3rSon1X/swift-repros/actions/workflows/repros.yml)
 
-GitHub Actions runs every reproducer on Linux x86_64 against three toolchains, so the failure and the fix can be seen
+GitHub Actions discovers every directory with a `run.sh` (top level and `upstreamed/`) and runs it on Linux x86_64 against three toolchains (listed in `.github/toolchains.json`), so the failure and the fix can be seen
 on a real system:
 
 - **swift 6.4.2 release** (official `swift:6.4.2-noble` image): the bug is expected to reproduce; that job fails,
@@ -32,6 +42,6 @@ on a real system:
 - **nightly main** (official `swiftlang/swift:nightly-main-noble` image, which can lag `main` by a few weeks):
   informational; it shows whether the current development toolchain is still affected.
 
-The workflow runs on every push and weekly. Each job's summary shows the full output of `run.sh`.
+A directory can add a `ci.json` with `{"with_fix_image": "<image>"}` to use a different image for its with-fix job. The workflow runs on every push and weekly. Each job's summary shows the full output of `run.sh`.
 
 Licensed under Apache-2.0.

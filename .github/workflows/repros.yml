@@ -1,6 +1,6 @@
 # Runs every reproducer against several Linux x86_64 toolchains:
 #   release   - the official Swift release image: the bug is expected to reproduce (the job fails, the run does not)
-#   with fix  - Swift 6.4.2 with the proposed fixes applied: must pass
+#   with fix  - Swift 6.4.2 with the proposed fixes applied: must pass (a directory's ci.json can override the image)
 #   nightly   - the official nightly image of main (it can lag main by a few weeks): informational
 # Weekly, to notice when the nightly toolchain picks up a fix. No artifacts are uploaded.
 name: repros
@@ -20,40 +20,52 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  list:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Every directory with a run.sh (top level and upstreamed/*) x every toolchain. A directory's optional
+          # ci.json {"with_fix_image": "..."} replaces the image of the toolchain that is expected to pass.
+          entries='[]'
+          while IFS= read -r script; do
+            dir="$(dirname "$script")"; dir="${dir#./}"
+            fix=""
+            [ -f "$dir/ci.json" ] && fix="$(jq -r '.with_fix_image // ""' "$dir/ci.json")"
+            entries="$(jq -c --arg repro "$dir" --arg fix "$fix" --argjson acc "$entries" '
+              $acc + [.[] | {repro: $repro, toolchain: .name, expect: .expect,
+                             image: (if .expect == "pass" and $fix != "" then $fix else .image end)}]
+            ' .github/toolchains.json)"
+          done < <(find . -path ./.git -prune -o \( -path './*/run.sh' -o -path './upstreamed/*/run.sh' \) -type f -print | sort)
+          echo "$entries" | jq .
+          echo "matrix=$(jq -c '{include: .}' <<<"$entries")" >> "$GITHUB_OUTPUT"
+
   repro:
-    name: ${{ matrix.repro }} · ${{ matrix.toolchain.name }}
+    needs: list
+    name: ${{ matrix.repro }} · ${{ matrix.toolchain }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
-    continue-on-error: ${{ matrix.toolchain.expect != 'pass' }}
+    continue-on-error: ${{ matrix.expect != 'pass' }}
     strategy:
       fail-fast: false
-      matrix:
-        repro:
-          - irgen-coercion-alloca-alignment
-          - silgen-isolation-nonsending-overrelease
-          - typed-throws-closure-generic-untyped
-        toolchain:
-          - name: swift 6.4.2 release
-            image: swift:6.4.2-noble
-            expect: bug
-          - name: swift 6.4.2 with fix
-            # Swift 6.4.2 plus backported fixes, including the ones proposed for these issues; see
-            # https://github.com/Hyp3rSon1X/swift-toolchains/releases/tag/swift-6.4.2-hyp3r.7
-            image: ghcr.io/hyp3rson1x/swift:6.4.2-hyp3r.7-noble@sha256:eca82664a750875021584e83a5a9bec0ad3b01951f333ab97c9d5a326bd8ba5d
-            expect: pass
-          - name: nightly main
-            image: swiftlang/swift:nightly-main-noble
-            expect: report
+      matrix: ${{ fromJSON(needs.list.outputs.matrix) }}
     container:
-      image: ${{ matrix.toolchain.image }}
+      image: ${{ matrix.image }}
     steps:
       - uses: actions/checkout@v5
       - name: Run ${{ matrix.repro }}/run.sh
         shell: bash
         env:
           REPRO: ${{ matrix.repro }}
-          TOOLCHAIN: ${{ matrix.toolchain.name }}
-          EXPECT: ${{ matrix.toolchain.expect }}
+          TOOLCHAIN: ${{ matrix.toolchain }}
+          EXPECT: ${{ matrix.expect }}
+          IMAGE: ${{ matrix.image }}
         run: |
           set -o pipefail
           ./"$REPRO"/run.sh 2>&1 | tee "$RUNNER_TEMP/out.txt"
@@ -71,7 +83,7 @@ jobs:
           {
             echo "### $REPRO · $TOOLCHAIN"
             echo
-            echo "Result: **$result** ($note). Image \`${{ matrix.toolchain.image }}\`."
+            echo "Result: **$result** ($note). Image \`$IMAGE\`."
             echo
             echo '```'
             sed -n '1,80p' "$RUNNER_TEMP/out.txt"

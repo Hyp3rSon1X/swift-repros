@@ -1,0 +1,17 @@
+[
+  {
+    "name": "swift 6.4.2 release",
+    "image": "swift:6.4.2-noble",
+    "expect": "bug"
+  },
+  {
+    "name": "swift 6.4.2 with fix",
+    "image": "ghcr.io/hyp3rson1x/swift:6.4.2-hyp3r.7-noble@sha256:eca82664a750875021584e83a5a9bec0ad3b01951f333ab97c9d5a326bd8ba5d",
+    "expect": "pass"
+  },
+  {
+    "name": "nightly main",
+    "image": "swiftlang/swift:nightly-main-noble",
+    "expect": "report"
+  }
+]
