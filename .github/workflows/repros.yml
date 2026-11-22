@@ -2,6 +2,7 @@
 #   release   - the official Swift release image: the bug is expected to reproduce (the job fails, the run does not)
 #   with fix  - Swift 6.4.2 with the proposed fixes applied: must pass (a directory's ci.json can override the image)
 #   nightly   - the official nightly image of main (it can lag main by a few weeks): informational
+#   previous  - the previous release (6.3.3): informational, shows whether a bug is a regression
 # Weekly, to notice when the nightly toolchain picks up a fix. No artifacts are uploaded.
 name: repros
 

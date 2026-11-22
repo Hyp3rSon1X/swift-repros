@@ -32,7 +32,7 @@ None yet. Directories whose fix was merged upstream move to [`upstreamed/`](upst
 
 [![repros](https://github.com/Hyp3rSon1X/swift-repros/actions/workflows/repros.yml/badge.svg)](https://github.com/Hyp3rSon1X/swift-repros/actions/workflows/repros.yml)
 
-GitHub Actions discovers every directory with a `run.sh` (top level and `upstreamed/`) and runs it on Linux x86_64 against three toolchains (listed in `.github/toolchains.json`), so the failure and the fix can be seen
+GitHub Actions discovers every directory with a `run.sh` (top level and `upstreamed/`) and runs it on Linux x86_64 against four toolchains (listed in `.github/toolchains.json`), so the failure and the fix can be seen
 on a real system:
 
 - **swift 6.4.2 release** (official `swift:6.4.2-noble` image): the bug is expected to reproduce; that job fails,
@@ -41,6 +41,8 @@ on a real system:
   carries other fixes, listed in its [release notes](https://github.com/Hyp3rSon1X/swift-toolchains/releases/tag/swift-6.4.2-hyp3r.7)); must pass.
 - **nightly main** (official `swiftlang/swift:nightly-main-noble` image, which can lag `main` by a few weeks):
   informational; it shows whether the current development toolchain is still affected.
+- **swift 6.3.3 release** (official `swift:6.3.3-noble` image): informational; it shows whether a bug is a
+  regression in 6.4.
 
 A directory can add a `ci.json` with `{"with_fix_image": "<image>"}` to use a different image for its with-fix job. The workflow runs on every push and weekly. Each job's summary shows the full output of `run.sh`.
 

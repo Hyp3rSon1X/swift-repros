@@ -13,5 +13,10 @@
     "name": "nightly main",
     "image": "swiftlang/swift:nightly-main-noble",
     "expect": "report"
+  },
+  {
+    "name": "swift 6.3.3 release",
+    "image": "swift:6.3.3-noble",
+    "expect": "report"
   }
 ]
