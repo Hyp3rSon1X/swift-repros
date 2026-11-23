@@ -3,8 +3,8 @@
 IRGen copies a value out of a coercion temporary that is allocated with 8-byte alignment but copied as 16-byte aligned, which crashes at `-Onone` on x86_64.
 
 - Upstream issue: https://github.com/swiftlang/swift/issues/93129
-- Upstream PR: not filed yet
-- Status: open upstream; fix ready, PR not filed yet
+- Upstream PR: https://github.com/swiftlang/swift/pull/94587
+- Status: open upstream; fix proposed in swiftlang/swift#94587 (in review)
 - Affects: Swift 6.3.3, 6.4.x and main (nightly 6.5-dev, 2026-11); the crash needs an x86_64 target
 
 ## Problem

@@ -3,8 +3,8 @@
 `swift-frontend` crashes during IR generation when a closure with an explicit `throws(E)` is passed to a generic parameter declared with untyped `throws`, for example the operation of `Task.init`, if `E` has stored properties.
 
 - Upstream issue: https://github.com/swiftlang/swift/issues/92312
-- Upstream PR: not filed yet
-- Status: open upstream; fix ready, PR not filed yet
+- Upstream PR: https://github.com/swiftlang/swift/pull/94589
+- Status: open upstream; fix proposed in swiftlang/swift#94589 (in review)
 - Affects: Swift 6.4.x and main (nightly 6.5-dev, 2026-11); 6.3.3 is not affected (a 6.4 regression)
 
 ## Problem

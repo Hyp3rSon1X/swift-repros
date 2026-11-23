@@ -3,8 +3,8 @@
 Passing `#isolation` to a consuming generic argument (such as `String(describing:)`) inside a `nonisolated(nonsending)` async function releases the caller's actor once too often, so the actor is deallocated while it is still running.
 
 - Upstream issue: https://github.com/swiftlang/swift/issues/92799
-- Upstream PR: not filed yet
-- Status: open upstream; fix ready, PR not filed yet
+- Upstream PR: https://github.com/swiftlang/swift/pull/94588
+- Status: open upstream; fix proposed in swiftlang/swift#94588 (in review)
 - Affects: Swift 6.3.3, 6.4.x and main (nightly 6.5-dev, 2026-11)
 
 ## Problem
