@@ -33,14 +33,19 @@ jobs:
         run: |
           set -euo pipefail
           # Every directory with a run.sh (top level and upstreamed/*) x every toolchain. A directory's optional
-          # ci.json {"with_fix_image": "..."} replaces the image of the toolchain that is expected to pass.
+          # ci.json {"with_fix_image": "..."} replaces the image of the toolchain that is expected to pass, and
+          # {"skip_toolchains": ["<name>", ...]} leaves toolchains out.
           entries='[]'
           while IFS= read -r script; do
             dir="$(dirname "$script")"; dir="${dir#./}"
-            fix=""
-            [ -f "$dir/ci.json" ] && fix="$(jq -r '.with_fix_image // ""' "$dir/ci.json")"
-            entries="$(jq -c --arg repro "$dir" --arg fix "$fix" --argjson acc "$entries" '
-              $acc + [.[] | {repro: $repro, toolchain: .name, expect: .expect,
+            fix=""; skip='[]'
+            if [ -f "$dir/ci.json" ]; then
+              fix="$(jq -r '.with_fix_image // ""' "$dir/ci.json")"
+              skip="$(jq -c '.skip_toolchains // []' "$dir/ci.json")"
+            fi
+            entries="$(jq -c --arg repro "$dir" --arg fix "$fix" --argjson skip "$skip" --argjson acc "$entries" '
+              $acc + [.[] | select(.name as $n | $skip | index($n) | not)
+                          | {repro: $repro, toolchain: .name, expect: .expect,
                              image: (if .expect == "pass" and $fix != "" then $fix else .image end)}]
             ' .github/toolchains.json)"
           done < <(find . -path ./.git -prune -o \( -path './*/run.sh' -o -path './upstreamed/*/run.sh' \) -type f -print | sort)
@@ -60,6 +65,15 @@ jobs:
       image: ${{ matrix.image }}
     steps:
       - uses: actions/checkout@v5
+      # A directory can bring a ci-setup.sh that installs what its run.sh needs besides the toolchain (for
+      # example a Swift SDK). It gets TOOLCHAIN and can extend the environment through GITHUB_ENV / GITHUB_PATH.
+      - name: Set up ${{ matrix.repro }}
+        if: hashFiles(format('{0}/ci-setup.sh', matrix.repro)) != ''
+        shell: bash
+        env:
+          REPRO: ${{ matrix.repro }}
+          TOOLCHAIN: ${{ matrix.toolchain }}
+        run: ./"$REPRO"/ci-setup.sh
       - name: Run ${{ matrix.repro }}/run.sh
         shell: bash
         env:
