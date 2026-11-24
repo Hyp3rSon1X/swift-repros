@@ -51,3 +51,5 @@ The runtime defines `_swift_stdlib_immortalize` without `SWIFT_CC(swift)`, match
 - official Swift 6.3.3 image with swift.org's 6.3.3 SDK: informational.
 
 The nightly `main` job is skipped (`ci.json`): the nightly image has no matching SDK for WebAssembly.
+
+Verified run: https://github.com/Hyp3rSon1X/swift-repros/actions/runs/45354722133 (2026-11-24): the 6.4.2 and 6.3.3 jobs reproduce the bug (link error, then the trap), the job with the fixed SDK passes. Run logs expire after 90 days; the weekly runs keep the workflow page current.
