@@ -12,7 +12,7 @@ Building the same module twice from the same inputs gives different `.swiftmodul
 `SILSerializer` (`lib/Serialization/SerializeSIL.cpp`) keeps two work lists in a `DenseSet` of pointers and writes them in iteration order, which depends on heap addresses:
 
 - `DifferentiabilityWitnessesToEmit`: the `SIL_DIFFERENTIABILITY_WITNESS` records, the functions they reference and the IDs given to them come out in a different order in each compiler process.
-- `FuncsToEmitDebug`: functions that only debug scopes refer to (functions that were inlined and then removed) are written as declarations in a different order. Embedded Swift serializes debug info for every module that is not the standard library, so this hits any Embedded module with inlined code.
+- `FuncsToEmitDebug`: functions that only debug scopes refer to (functions that were inlined and then removed) are written as declarations in a different order. Embedded Swift serializes debug info for its modules (on `main` for every Embedded module, in 6.4.x for all but the standard library), so this hits any Embedded module with inlined code.
 
 The module still works; only its bytes change.
 
