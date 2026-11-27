@@ -5,7 +5,7 @@ Building the same module twice from the same inputs gives different `.swiftmodul
 - Upstream issue: none (the PR describes the problem)
 - Upstream PR: not filed yet
 - Status: fix ready, not proposed upstream yet
-- Affects: Swift 6.4.0 and 6.4.2 (macOS arm64, Linux x86_64); the code is unchanged on `main`. Host-independent.
+- Affects: Swift 6.3.3, 6.4.0, 6.4.2 and nightly `main` (6.5-dev, 2026-11) on macOS arm64 and Linux x86_64. Host-independent.
 
 ## Problem
 
@@ -43,3 +43,5 @@ Both work lists become `llvm::SetVector`s, so the records are written in inserti
 ## CI
 
 [The workflow](https://github.com/Hyp3rSon1X/swift-repros/actions/workflows/repros.yml) runs this directory's `run.sh` on Linux x86_64 with the official Swift 6.4.2 image (the bug reproduces, so this job fails, as expected), with the nightly `main` image and with Swift 6.3.3 (informational). There is no Linux image with the fix yet, so that job is skipped (`ci.json`).
+
+Verified run: https://github.com/Hyp3rSon1X/swift-repros/actions/runs/45959361990 (2026-11-27): 6.3.3, 6.4.2 and nightly `main` reproduce both checks (4 builds, 4 different modules each; the client sees all 32 helpers). Run logs expire after 90 days; the weekly runs keep the workflow page current.
