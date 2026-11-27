@@ -23,7 +23,8 @@ None yet.
 |[`irgen-coercion-alloca-alignment`](irgen-coercion-alloca-alignment)|Misaligned coercion temporary in IRGen; aligned load crashes on x86_64|[swiftlang/swift#93129](https://github.com/swiftlang/swift/issues/93129)|in review: [swiftlang/swift#94587](https://github.com/swiftlang/swift/pull/94587)|
 |[`silgen-isolation-nonsending-overrelease`](silgen-isolation-nonsending-overrelease)|`#isolation` in a `nonisolated(nonsending)` function over-releases the calling actor|[swiftlang/swift#92799](https://github.com/swiftlang/swift/issues/92799)|in review: [swiftlang/swift#94588](https://github.com/swiftlang/swift/pull/94588)|
 |[`typed-throws-closure-generic-untyped`](typed-throws-closure-generic-untyped)|IRGen crash for a typed-throws closure passed to a generic untyped-throws parameter|[swiftlang/swift#92312](https://github.com/swiftlang/swift/issues/92312)|in review: [swiftlang/swift#94589](https://github.com/swiftlang/swift/pull/94589)|
-|[`wasm-immortalize-signature`](wasm-immortalize-signature)|`_swift_stdlib_immortalize` has the wrong signature on WebAssembly; callers through SwiftShims (swift-collections 1.7.6) do not link or trap|not filed yet|fix ready, not proposed yet|
+|[`serialization-determinism`](serialization-determinism)|`.swiftmodule` bytes change from build to build for modules with differentiability witnesses and for Embedded modules|none (PR only)|fix ready, not proposed yet|
+|[`wasm-immortalize-signature`](wasm-immortalize-signature)|`_swift_stdlib_immortalize` has the wrong signature on WebAssembly; callers through SwiftShims (swift-collections 1.7.6) do not link or trap|[swiftlang/swift#94614](https://github.com/swiftlang/swift/issues/94614)|fix ready, PR not filed yet|
 
 ## Upstreamed
 

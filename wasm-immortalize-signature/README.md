@@ -2,9 +2,9 @@
 
 Code that calls `_swift_stdlib_immortalize` through its SwiftShims declaration does not link cleanly for WebAssembly: wasm-ld reports `function signature mismatch`, and the call traps at run time. swift-collections 1.7.6 makes such a call from inlinable code, so every program that uses its `Deque` is affected.
 
-- Upstream issue: not filed yet
+- Upstream issue: https://github.com/swiftlang/swift/issues/94614
 - Upstream PR: not filed yet
-- Status: fix ready, not proposed upstream yet
+- Status: reported upstream (swiftlang/swift#94614); fix ready, PR not filed yet
 - Affects: every Swift SDK for WebAssembly we tried (swift.org 6.3.3 and 6.4.2); the code is unchanged on `main`. Other platforms are not affected.
 
 ## Problem

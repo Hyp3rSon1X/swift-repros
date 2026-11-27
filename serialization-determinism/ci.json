@@ -1,0 +1,3 @@
+{
+  "skip_toolchains": ["swift 6.4.2 with fix"]
+}
