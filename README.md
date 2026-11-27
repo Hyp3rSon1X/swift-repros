@@ -25,6 +25,7 @@ None yet.
 |[`typed-throws-closure-generic-untyped`](typed-throws-closure-generic-untyped)|IRGen crash for a typed-throws closure passed to a generic untyped-throws parameter|[swiftlang/swift#92312](https://github.com/swiftlang/swift/issues/92312)|in review: [swiftlang/swift#94589](https://github.com/swiftlang/swift/pull/94589)|
 |[`serialization-determinism`](serialization-determinism)|`.swiftmodule` bytes change from build to build for modules with differentiability witnesses and for Embedded modules|none (PR only)|fix ready, not proposed yet|
 |[`wasm-immortalize-signature`](wasm-immortalize-signature)|`_swift_stdlib_immortalize` has the wrong signature on WebAssembly; callers through SwiftShims (swift-collections 1.7.6) do not link or trap|[swiftlang/swift#94614](https://github.com/swiftlang/swift/issues/94614)|fix ready, PR not filed yet|
+|[`wasi-cxx-exceptions`](wasi-cxx-exceptions)|C++ targets do not link for WASI (`undefined symbol: __cxa_throw`) unless built with `-fno-exceptions`|none yet|reproducer ready, not reported yet|
 
 ## Upstreamed
 
